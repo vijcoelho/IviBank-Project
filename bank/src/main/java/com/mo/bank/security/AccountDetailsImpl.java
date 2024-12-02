@@ -20,10 +20,6 @@ public class AccountDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /*
-         * Aqui estamos convertendo a lista de Roles do Account
-         * em uma coleção de GrantedAuthority, que é exigida pelo Spring Security.
-         */
         return account.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))

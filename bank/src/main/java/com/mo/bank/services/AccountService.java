@@ -13,6 +13,9 @@ public class AccountService {
     private AccountRepository accountRepository;
 
     public ResponseEntity<String> createAccount(Account account) {
+        if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists!");
+        }
         return ResponseEntity.ok("Account created \n" + accountRepository.save(account));
     }
 }

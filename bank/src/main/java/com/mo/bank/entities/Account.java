@@ -42,12 +42,4 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Roles> roles;
-
-    public List<Roles> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Roles> roles) {
-        this.roles = roles;
-    }
 }
