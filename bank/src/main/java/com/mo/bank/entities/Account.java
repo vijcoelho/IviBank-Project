@@ -3,6 +3,8 @@ package com.mo.bank.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "account")
 @AllArgsConstructor
@@ -10,16 +12,16 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = "roles")
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_account")
-    private Integer idAccount;
+    @Column(name = "account_id")
+    private Integer accountId;
 
-    @Column(name = "account_name", nullable = false)
-    private String accountName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -27,9 +29,25 @@ public class Account {
     @Column(name = "email_password", nullable = false)
     private String emailPassword;
 
-    @Column(name = "card", length = 16)
-    private String card;
+    @Column(name = "credit_card_number", length = 16)
+    private String creditCardNumber;
 
-    @Column(name = "password_card")
-    private String passwordCard;
+    @Column(name = "card_password")
+    private String cardPassword;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "account_roles",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Roles> roles;
+
+    public List<Roles> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
+    }
 }
