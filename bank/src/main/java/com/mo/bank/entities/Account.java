@@ -35,6 +35,9 @@ public class Account {
     @Column(name = "card_password")
     private String cardPassword;
 
+    @Column(name = "money")
+    private Double money;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "account_roles",
