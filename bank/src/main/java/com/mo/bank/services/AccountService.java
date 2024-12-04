@@ -9,6 +9,7 @@ import com.mo.bank.security.SecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class AccountService {
     @Autowired
     private SecurityConfiguration securityConfiguration;
 
+
     public void createAccount(Account account) throws IllegalAccessException {
         if (account.getEmail() == null || account.getEmailPassword() == null) {
             throw new IllegalAccessException("Email and password is required");
@@ -46,10 +48,10 @@ public class AccountService {
 
     public ResponseEntity<String> authenticateAccount(Map<String, String> request) {
         String email = request.get("email");
-        String password = securityConfiguration.passwordEncoder().encode(request.get("password"));
+        String password = request.get("password");
         Optional<Account> account = accountRepository.findByEmail(email);
         if (account.isPresent()) {
-            if (email.equals(account.get().getEmail()) && password.equals(account.get().getEmailPassword())) {
+            if (email.equals(account.get().getEmail()) && securityConfiguration.passwordEncoder().matches(password, account.get().getEmailPassword())) {
                 String token = jwtTokenService.generateToken(account);
                 return ResponseEntity.ok(token);
             }
