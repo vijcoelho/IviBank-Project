@@ -11,7 +11,9 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtTokenService {
@@ -21,12 +23,18 @@ public class JwtTokenService {
 
     public String generateToken(Optional<Account> account) {
         try {
+            List<String> roles = account.get().getRoles()
+                    .stream()
+                    .map(role -> role.getName().name())
+                    .collect(Collectors.toList());
+
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             return JWT.create()
                     .withIssuer(ISSUER)
                     .withIssuedAt(new Date())
-                    .withExpiresAt(new Date(System.currentTimeMillis() + 86400000))
+                    .withExpiresAt(Date.from(Instant.now().plusSeconds(86400)))
                     .withSubject(account.get().getEmail())
+                    .withClaim("roles", roles)
                     .sign(algorithm);
         } catch (JWTCreationException exception) {
             throw new RuntimeException("Error to create token.", exception);
@@ -42,7 +50,7 @@ public class JwtTokenService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception){
-            throw new JWTVerificationException("Token inválido ou expirado.");
+            throw new JWTVerificationException("Token is invalid or expired");
         }
     }
 

@@ -38,6 +38,9 @@ public class Account {
     @Column(name = "money")
     private Double money;
 
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "account_roles",

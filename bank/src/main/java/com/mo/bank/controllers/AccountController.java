@@ -5,10 +5,7 @@ import com.mo.bank.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -29,4 +26,29 @@ public class AccountController {
     public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
         return accountService.authenticateAccount(request);
     }
+
+    @PostMapping("/generate-card")
+    public ResponseEntity<String> generateCard(@RequestBody Map<String, String> request) {
+        return accountService.createCreditCard(request);
+    }
+
+    @PostMapping("/generate-card/password")
+    public ResponseEntity<String> generateCardPassword(@RequestBody String email, @RequestBody String password) {
+        return accountService.createCardPassword(email, password);
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<String> updateStatus(@RequestBody String email, @RequestBody Boolean status) {
+        return accountService.changeAccountStatus(email, status);
+    }
+
+    @PutMapping("/deposit")
+    public ResponseEntity<String> deposit(@RequestBody String email, @RequestBody Double money) {
+        return accountService.deposit(email, money);
+    }
+    @PutMapping("/withdraw")
+    public ResponseEntity<String> withdraw(@RequestBody String email, @RequestBody Double money) {
+        return accountService.withdraw(email, money);
+    }
+
 }

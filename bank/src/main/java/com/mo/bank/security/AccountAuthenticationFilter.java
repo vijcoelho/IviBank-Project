@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 public class AccountAuthenticationFilter extends OncePerRequestFilter {
@@ -31,16 +32,21 @@ public class AccountAuthenticationFilter extends OncePerRequestFilter {
             String token = recoveryToken(request);
             if (token != null) {
                 String subject = jwtTokenService.getSubjectFromToken(token);
-                Account account = accountRepository.findByEmail(subject).get();
-                AccountDetailsImpl accountDetails = new AccountDetailsImpl(account);
+                Optional<Account> accountOpt = accountRepository.findByEmail(subject);
+                if (accountOpt.isPresent()) {
+                    Account account = accountOpt.get();
+                    AccountDetailsImpl accountDetails = new AccountDetailsImpl(account);
 
-                Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                accountDetails.getUsername(),
-                                null,
-                                accountDetails.getAuthorities());
+                    Authentication authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    accountDetails.getUsername(),
+                                    null,
+                                    accountDetails.getAuthorities());
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    throw new RuntimeException("Account not found");
+                }
             } else {
                 throw new RuntimeException("The token is null");
             }
@@ -50,8 +56,8 @@ public class AccountAuthenticationFilter extends OncePerRequestFilter {
 
     private String recoveryToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null) {
-            return authorizationHeader.replace("Bearer", "").trim();
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.replace("Bearer ", "").trim();
         }
         return null;
     }
@@ -61,5 +67,5 @@ public class AccountAuthenticationFilter extends OncePerRequestFilter {
         return Arrays.stream(SecurityConfiguration.ENDPOINTS_WITH_AUTH_NO_REQUIRED)
                 .noneMatch(requestURI::startsWith);
     }
-
 }
+

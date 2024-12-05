@@ -23,7 +23,12 @@ public class SecurityConfiguration {
     };
 
     public static final String[] ENDPOINTS_WITH_AUTH_REQUIRED = {
-            "/account/home"
+            "/account/home",
+            "/account/generate-card",
+            "/account/generate-card-password",
+            "/account/update-status",
+            "/account/deposit",
+            "/account/withdraw"
     };
 
     public static final String[] ENDPOINTS_WITH_ADMIN = {
@@ -42,10 +47,11 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers(ENDPOINTS_WITH_AUTH_NO_REQUIRED).permitAll()
-                .requestMatchers(ENDPOINTS_WITH_AUTH_REQUIRED).authenticated()
+                .requestMatchers(ENDPOINTS_WITH_AUTH_REQUIRED).hasRole("CUSTOMER")
                 .requestMatchers(ENDPOINTS_WITH_ADMIN).hasRole("ADMINISTRATOR")
                 .anyRequest().denyAll()
-                .and().addFilterBefore(accountAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .and()
+                .addFilterBefore(accountAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
