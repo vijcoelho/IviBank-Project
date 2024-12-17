@@ -40,12 +40,4 @@ public class Account {
 
     @Column(name = "status", nullable = false)
     private Boolean status;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "account_roles",
-            joinColumns = @JoinColumn(name = "account_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Roles> roles;
 }

@@ -2,15 +2,12 @@ package com.mo.bank.services;
 
 import com.mo.bank.entities.Account;
 import com.mo.bank.entities.Card;
-import com.mo.bank.entities.RoleName;
-import com.mo.bank.entities.Roles;
 import com.mo.bank.repositories.AccountRepository;
 import com.mo.bank.security.JwtTokenService;
 import com.mo.bank.security.SecurityConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,11 +36,6 @@ public class AccountService {
         if (account.getEmail() == null || account.getEmailPassword() == null) {
             throw new IllegalAccessException("Email and password is required");
         }
-        if (account.getRoles() == null || account.getRoles().isEmpty()) {
-            Roles defaultRole = new Roles();
-            defaultRole.setName(RoleName.ROLE_CUSTOMER);
-            account.setRoles(List.of(defaultRole));
-        }
         account.setStatus(true);
         account.setEmailPassword(securityConfiguration.passwordEncoder().encode(account.getEmailPassword()));
         accountRepository.save(account);
@@ -57,7 +49,7 @@ public class AccountService {
         if (account.isPresent()) {
             if (email.equals(account.get().getEmail()) &&
                     securityConfiguration.passwordEncoder().matches(password, account.get().getEmailPassword())) {
-                String token = jwtTokenService.generateToken(account);
+                String token = jwtTokenService.generateToken(account.get());
                 return ResponseEntity.ok(token);
             }
         }

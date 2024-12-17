@@ -14,10 +14,17 @@ public class AccountDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Email not found in database"));
-        return new AccountDetailsImpl(account);
+        AccountDetailsImpl accountDetails = new AccountDetailsImpl(jwtTokenService, accountRepository);
+        accountDetails.loadAccountFromToken(account.getEmail());
+
+        return accountDetails;
     }
 }
+

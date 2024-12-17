@@ -31,10 +31,6 @@ public class SecurityConfiguration {
             "/account/withdraw"
     };
 
-    public static final String[] ENDPOINTS_WITH_ADMIN = {
-            "/account/admin"
-    };
-
     private final AccountAuthenticationFilter accountAuthenticationFilter;
 
     public SecurityConfiguration(AccountAuthenticationFilter accountAuthenticationFilter) {
@@ -47,9 +43,8 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
                 .requestMatchers(ENDPOINTS_WITH_AUTH_NO_REQUIRED).permitAll()
-                .requestMatchers(ENDPOINTS_WITH_AUTH_REQUIRED).hasRole("CUSTOMER")
-                .requestMatchers(ENDPOINTS_WITH_ADMIN).hasRole("ADMINISTRATOR")
-                .anyRequest().denyAll()
+                .requestMatchers(ENDPOINTS_WITH_AUTH_REQUIRED).authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(accountAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -30,25 +30,21 @@ public class AccountAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (checkIfEndpointIsNotPublic(request)) {
             String token = recoveryToken(request);
-            if (token != null) {
-                String subject = jwtTokenService.getSubjectFromToken(token);
-                Optional<Account> accountOpt = accountRepository.findByEmail(subject);
-                if (accountOpt.isPresent()) {
-                    Account account = accountOpt.get();
-                    AccountDetailsImpl accountDetails = new AccountDetailsImpl(account);
-
-                    Authentication authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    accountDetails.getUsername(),
-                                    null,
-                                    accountDetails.getAuthorities());
-
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
-                    throw new RuntimeException("Account not found");
+            if (token != null && jwtTokenService.validateToken(token)) {
+                String subject = jwtTokenService.getEmailFromToken(token);
+                if (subject != null) {
+                    Optional<Account> accountOpt = accountRepository.findByEmail(subject);
+                    if (accountOpt.isPresent()) {
+                        Account account = accountOpt.get();
+                        AccountDetailsImpl accountDetails = new AccountDetailsImpl(jwtTokenService, accountRepository);
+                        accountDetails.loadAccountFromToken(token);
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                accountDetails, null, accountDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    } else {
+                        System.out.println("Conta não encontrada para o subject: " + subject);
+                    }
                 }
-            } else {
-                throw new RuntimeException("The token is null");
             }
         }
         filterChain.doFilter(request, response);
@@ -68,4 +64,3 @@ public class AccountAuthenticationFilter extends OncePerRequestFilter {
                 .noneMatch(requestURI::startsWith);
     }
 }
-
