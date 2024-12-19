@@ -35,7 +35,7 @@ public class Account implements UserDetails {
     @Column(name = "credit_card_number", length = 16)
     private String creditCardNumber;
 
-    @Column(name = "card_password")
+    @Column(name = "card_password", length = 4)
     private String cardPassword;
 
     @Column(name = "money")

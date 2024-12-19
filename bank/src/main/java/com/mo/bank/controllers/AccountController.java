@@ -16,34 +16,33 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/account")
 public class AccountController {
 
     private final AccountService accountService;
-    private final JwtService jwtService;
 
-    public AccountController(JwtService jwtService, AccountService accountService) {
-        this.jwtService = jwtService;
+    public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    @PostMapping("/auth/signup")
-    public ResponseEntity<Account> register(@RequestBody Account account) {
-        Account registeredAccount = accountService.signup(account);
-        return ResponseEntity.ok(registeredAccount);
+    @PutMapping("/generate_card")
+    public ResponseEntity<String> generateCard(@RequestBody String email, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        return accountService.cardGenerate(email, token);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody Map<String, String> input) {
-        Account authAccount = accountService.login(input);
-        if (authAccount == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        String jwtToken = jwtService.generateToken(authAccount);
-        LoginResponse loginResponse = new LoginResponse();
+    @PutMapping("/card_password")
+    public ResponseEntity<String> cardPassword(@RequestBody Map<String, String> input, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
 
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+        return accountService.passwordCardGenerate(input, token);
+    }
 
-        return ResponseEntity.ok(loginResponse);
+    @PutMapping("/change_status")
+    public ResponseEntity<String> changeStatus(@RequestBody Map<String, String> input, @RequestHeader("Authorization") String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+
+        return accountService.changeStatus(input, token);
     }
 }

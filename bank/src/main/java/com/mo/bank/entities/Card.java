@@ -15,8 +15,6 @@ import java.util.Random;
 @ToString
 public class Card {
 
-    private Random random;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "card_id")
@@ -34,10 +32,4 @@ public class Card {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @Column(name = "account_id")
     private Integer accountId;
-
-    public String generateCardNumber() {
-        random = new Random();
-        long card = random.nextLong(9999999999999999L);
-        return String.valueOf(card);
-    }
 }

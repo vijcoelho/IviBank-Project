@@ -14,6 +14,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Transaction {
 
     @Id

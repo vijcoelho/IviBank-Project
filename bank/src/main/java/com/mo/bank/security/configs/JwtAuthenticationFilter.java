@@ -41,21 +41,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        System.out.println("JWT Filter chamado para URL: " + request.getRequestURI());
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Authorization header ausente ou formato inválido.");
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
             final String jwt = authHeader.substring(7);
+            System.out.println("Token JWT extraído: " + jwt);
+
             final String accountEmail = jwtService.extractEmail(jwt);
+            System.out.println("Email extraído do token: " + accountEmail);
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("Authentication atual: " + (authentication != null ? authentication.getName() : "null"));
 
             if (accountEmail != null && authentication == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(accountEmail);
+                System.out.println("Detalhes do usuário carregados: " + userDetails.getUsername());
 
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken  = new UsernamePasswordAuthenticationToken(
@@ -66,14 +73,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    System.out.println("Authentication configurada no SecurityContext.");
+                } else {
+                    System.out.println("Token JWT inválido.");
                 }
             }
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
+            System.out.println("Erro durante o processamento do token JWT: " + e.getMessage());
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
     }
+
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
