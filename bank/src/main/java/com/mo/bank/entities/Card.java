@@ -32,4 +32,11 @@ public class Card {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
     @Column(name = "account_id")
     private Integer accountId;
+
+    public Card(String cardNumber, String cardholderName, String cardPassword, Integer accountId) {
+        this.cardNumber = cardNumber;
+        this.cardholderName = cardholderName;
+        this.cardPassword = cardPassword;
+        this.accountId = accountId;
+    }
 }

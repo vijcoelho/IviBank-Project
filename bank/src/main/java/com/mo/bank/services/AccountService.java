@@ -1,7 +1,9 @@
 package com.mo.bank.services;
 
 import com.mo.bank.entities.Account;
+import com.mo.bank.entities.Card;
 import com.mo.bank.repositories.AccountRepository;
+import com.mo.bank.repositories.CardRepository;
 import com.mo.bank.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,10 +19,12 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final JwtService jwtService;
+    private final CardRepository cardRepository;
 
-    public AccountService(AccountRepository accountRepository, JwtService jwtService) {
+    public AccountService(AccountRepository accountRepository, JwtService jwtService, CardRepository cardRepository) {
         this.accountRepository = accountRepository;
         this.jwtService = jwtService;
+        this.cardRepository = cardRepository;
     }
 
     public ResponseEntity<String> cardGenerate(String email, String token) {
@@ -43,7 +47,16 @@ public class AccountService {
             return ResponseEntity.ok("You already have a card number");
         }
 
-        account.setCreditCardNumber(cardNumber());
+        String numbers = cardNumber();
+        Card card = new Card(
+                numbers,
+                account.getName(),
+                null,
+                account.getAccountId()
+        );
+        cardRepository.save(card);
+
+        account.setCreditCardNumber(numbers);
         accountRepository.save(account);
 
         return ResponseEntity.ok("You got a card number");
@@ -75,6 +88,18 @@ public class AccountService {
         if (account.getCardPassword() != null) {
             return ResponseEntity.ok("You already have a card password");
         }
+
+        Optional<Card> card = cardRepository.findByAccountId(account.getAccountId());
+
+        if (card.isEmpty()) {
+            return ResponseEntity.badRequest().body("Card not found");
+        }
+        if (card.get().getCardPassword() != null) {
+            return ResponseEntity.badRequest().body("The card already has a password");
+        }
+
+        card.get().setCardPassword(password);
+        cardRepository.save(card.get());
 
         account.setCardPassword(password);
         accountRepository.save(account);
