@@ -20,11 +20,13 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final JwtService jwtService;
     private final CardRepository cardRepository;
+    private final AuthService authService;
 
-    public AccountService(AccountRepository accountRepository, JwtService jwtService, CardRepository cardRepository) {
+    public AccountService(AccountRepository accountRepository, JwtService jwtService, CardRepository cardRepository, AuthService authService) {
         this.accountRepository = accountRepository;
         this.jwtService = jwtService;
         this.cardRepository = cardRepository;
+        this.authService = authService;
     }
 
     public ResponseEntity<String> cardGenerate(String email, String token) {
@@ -132,6 +134,10 @@ public class AccountService {
             return ResponseEntity.ok("Your account has been deactivated");
         }
         return ResponseEntity.ok("Your account has been activated");
+    }
+
+    public Account getAuth() {
+        return authService.getAuthAccount();
     }
 
     private String cardNumber() {

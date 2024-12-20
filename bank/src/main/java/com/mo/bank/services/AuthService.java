@@ -2,7 +2,7 @@ package com.mo.bank.services;
 
 import com.mo.bank.entities.Account;
 import com.mo.bank.repositories.AccountRepository;
-import org.springframework.http.ResponseEntity;
+import lombok.Getter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +17,9 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    @Getter
+    private Account authAccount;
 
     public AuthService(
             AccountRepository accountRepository,
@@ -43,9 +46,10 @@ public class AuthService {
                         password
                 )
         );
-
-        return accountRepository.findByEmail(email)
+        authAccount = accountRepository.findByEmail(email)
                 .orElseThrow();
+
+        return authAccount;
     }
 
     public Account changeEmailPassword(Map<String, String> input) {

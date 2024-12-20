@@ -24,10 +24,9 @@ public class TransactionController {
         return transactionService.makeTransaction(input, token);
     }
 
-    @GetMapping("/get_all")
-    public List<Transaction> getAllById(@RequestBody Integer id, @RequestHeader("Authorization") String authorizationHeader) {
+    @GetMapping("/get_all/{id}")
+    public List<Transaction> getAllById(@PathVariable Integer id, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         return transactionService.findAllAccountTransaction(id, token);
     }
-
 }

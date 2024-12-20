@@ -45,4 +45,9 @@ public class AccountController {
 
         return accountService.changeStatus(input, token);
     }
+
+    @GetMapping("/me")
+    public Account getMe() {
+        return accountService.getAuth();
+    }
 }
