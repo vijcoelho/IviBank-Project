@@ -35,18 +35,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody Map<String, String> input) {
-        Account authAccount = authService.login(input);
-        if (authAccount == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<?> login(@RequestBody Map<String, String> input) {
+        ResponseEntity<?> response = authService.login(input);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            Account authAccount = (Account) response.getBody();
+
+            String jwtToken = jwtService.generateToken(authAccount);
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setToken(jwtToken);
+            loginResponse.setExpiresIn(jwtService.getExpirationTime());
+
+            return ResponseEntity.ok(loginResponse);
         }
-        String jwtToken = jwtService.generateToken(authAccount);
-        LoginResponse loginResponse = new LoginResponse();
-
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
-
-        return ResponseEntity.ok(loginResponse);
+        return response;
     }
 
     @PutMapping("/change_password")
