@@ -38,6 +38,7 @@ public class TransactionService {
         String senderAccount = input.get("sender_account");
         String receiverAccount = input.get("receiver_account");
         String money = input.get("money");
+        String password = input.get("password");
 
         Optional<Account> sender = accountRepository.findById(Integer.valueOf(senderAccount));
         Optional<Account> receiver = accountRepository.findById(Integer.valueOf(receiverAccount));
@@ -48,6 +49,9 @@ public class TransactionService {
         }
         if (receiver.isEmpty()) {
             return ResponseEntity.badRequest().body("Receiver account is null");
+        }
+        if (!sender.get().getCardPassword().equals(password)) {
+            return ResponseEntity.badRequest().body("Your password is incorrect");
         }
         if (!accountService.isEmailValid(sender.get(), emailFromToken)) {
             return ResponseEntity.badRequest().body("Account not found");

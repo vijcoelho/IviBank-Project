@@ -29,7 +29,8 @@ public class AccountService {
         this.authService = authService;
     }
 
-    public ResponseEntity<String> cardGenerate(String email, String token) {
+    public ResponseEntity<String> cardGenerate(Map<String, String> input, String token) {
+        String email = input.get("email");
         String emailFromToken = jwtService.extractEmail(token);
 
         Optional<Account> currentAccount = accountRepository.findByEmail(email);
@@ -74,6 +75,9 @@ public class AccountService {
 
         if (currentAccount.isEmpty()) {
             return ResponseEntity.badRequest().body("Account not found");
+        }
+        if (currentAccount.get().getCreditCardNumber() == null) {
+            return ResponseEntity.badRequest().body("You need a card number to get a password for this card");
         }
 
         Account account = currentAccount.get();

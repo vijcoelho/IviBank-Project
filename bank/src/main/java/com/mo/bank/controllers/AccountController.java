@@ -26,10 +26,10 @@ public class AccountController {
     }
 
     @PutMapping("/generate_card")
-    public ResponseEntity<String> generateCard(@RequestBody String email, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<String> generateCard(@RequestBody Map<String, String> input, @RequestHeader("Authorization") String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
 
-        return accountService.cardGenerate(email, token);
+        return accountService.cardGenerate(input, token);
     }
 
     @PutMapping("/card_password")
