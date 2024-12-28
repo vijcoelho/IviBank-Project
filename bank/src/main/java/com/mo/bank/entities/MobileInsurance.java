@@ -7,7 +7,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "car_insurance")
+@Table(name = "mobile_insurance")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,23 +15,23 @@ import java.util.Date;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class CarInsurance {
+public class MobileInsurance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer carInsuranceId;
+    private Integer mobileInsuranceId;
 
-    @Column(name = "car_contract_active", nullable = false)
+    @Column(name = "mobile_contract_active", nullable = false)
     private Boolean isActive;
 
-    @Column(name = "car_contract_date", nullable = false)
+    @Column(name = "mobile_contract_date", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
-    @Column(name = "car_contract_price", nullable = false)
+    @Column(name = "mobile_contract_price", nullable = false)
     private Double price;
 
-    @Column(name = "car_contract_paid", nullable = false)
+    @Column(name = "mobile_contract_paid", nullable = false)
     private Boolean isPaid;
 
     @JoinColumn(name = "account_id", referencedColumnName = "account_id")
