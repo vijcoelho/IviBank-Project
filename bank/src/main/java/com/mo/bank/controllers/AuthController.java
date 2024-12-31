@@ -29,8 +29,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Account> register(@RequestBody Account account) {
-        Account registeredAccount = authService.signup(account);
+    public ResponseEntity<Account> register(@RequestBody Map<String, String> input) {
+        Account registeredAccount = authService.signup(input);
         return ResponseEntity.ok(registeredAccount);
     }
 

@@ -1,7 +1,9 @@
 package com.mo.bank.services;
 
 import com.mo.bank.entities.Account;
+import com.mo.bank.entities.Token;
 import com.mo.bank.repositories.AccountRepository;
+import com.mo.bank.repositories.TokenRepository;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final TokenRepository tokenRepository;
     private static final int MAX_ATTEMPTS = 3;
     private static final long BLOCK_TIME_MS = 30_000;
     private final Map<String, AttemptInfo> attempts = new HashMap<>();
@@ -30,15 +33,42 @@ public class AuthService {
     public AuthService(
             AccountRepository accountRepository,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager
+            AuthenticationManager authenticationManager,
+            TokenRepository tokenRepository
     ) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.tokenRepository = tokenRepository;
     }
 
-    public Account signup(Account account) {
-        account.setEmailPassword(passwordEncoder.encode(account.getPassword()));
+    public Account signup(Map<String, String> input) {
+        String name = input.get("name");
+        String email = input.get("email");
+        String password = passwordEncoder.encode(input.get("password"));
+        String cpf = input.get("cpf");
+        String pet = input.get("pet_name");
+        String color = input.get("favorite_color");
+        String movie = input.get("favorite_movie");
+        String toy = input.get("favorite_toy");
+
+        Account account = new Account();
+        account.setName(name);
+        account.setEmail(email);
+        account.setEmailPassword(password);
+        account.setCpf(cpf);
+        account = accountRepository.save(account);
+
+        Token token = new Token(
+                account.getAccountId(),
+                pet,
+                toy,
+                color,
+                movie
+        );
+        token = tokenRepository.save(token);
+
+        account.setTokenId(token.getTokenId());
         return accountRepository.save(account);
     }
 

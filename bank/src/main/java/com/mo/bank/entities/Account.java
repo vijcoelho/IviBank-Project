@@ -47,6 +47,9 @@ public class Account implements UserDetails {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
+    @JoinColumn(name = "token_id", referencedColumnName = "token_id")
+    private Integer tokenId;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
