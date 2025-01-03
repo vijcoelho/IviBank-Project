@@ -50,6 +50,13 @@ public class Account implements UserDetails {
     @JoinColumn(name = "token_id", referencedColumnName = "token_id")
     private Integer tokenId;
 
+    public Account(String name, String email, String emailPassword, String cpf) {
+        this.name = name;
+        this.email = email;
+        this.emailPassword = emailPassword;
+        this.cpf = cpf;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

@@ -52,20 +52,10 @@ public class AuthService {
         String movie = input.get("favorite_movie");
         String toy = input.get("favorite_toy");
 
-        Account account = new Account();
-        account.setName(name);
-        account.setEmail(email);
-        account.setEmailPassword(password);
-        account.setCpf(cpf);
-        account = accountRepository.save(account);
+        Account account = new Account(name, email, password, cpf);
+        accountRepository.save(account);
 
-        Token token = new Token(
-                account.getAccountId(),
-                pet,
-                toy,
-                color,
-                movie
-        );
+        Token token = new Token(account.getAccountId(), pet, toy, color, movie);
         token = tokenRepository.save(token);
 
         account.setTokenId(token.getTokenId());
@@ -101,23 +91,39 @@ public class AuthService {
         }
     }
 
-    public Account changeEmailPassword(Map<String, String> input) {
+    public ResponseEntity<?> changePassword(Map<String, String> input) {
         String email = input.get("email");
-        String newPassword = input.get("newPassword");
-        String confirmPassword = input.get("confirmPassword");
+        String token = input.get("token");
+        String newPassword = input.get("new_password");
+        String confirmPassword = input.get("confirm_password");
 
         Optional<Account> currentAccount = accountRepository.findByEmail(email);
 
         if (currentAccount.isEmpty()) {
-            return null;
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Email do not exists");
         }
         if (!newPassword.equals(confirmPassword)) {
-            return null;
+            return ResponseEntity.badRequest().body("The new password needs to be equals in the confirm input");
         }
 
-        Account account = currentAccount.get();
-        account.setEmailPassword(passwordEncoder.encode(newPassword));
-        return accountRepository.save(account);
+        Optional<Token> accountToken = tokenRepository.findTokenByAccountId(currentAccount.get().getAccountId());
+
+        if (accountToken.isEmpty()) {
+            return ResponseEntity.badRequest().body("Token not found for the account");
+        }
+
+        Token tokenDetails = accountToken.get();
+        if (!token.equals(tokenDetails.getPetName()) &&
+                !token.equals(tokenDetails.getFavoriteToy()) &&
+                !token.equals(tokenDetails.getFavoriteColor()) &&
+                !token.equals(tokenDetails.getFavoriteMovie())) {
+            return ResponseEntity.badRequest().body("Invalid token");
+        }
+
+        currentAccount.get().setEmailPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(currentAccount.get());
+
+        return ResponseEntity.ok("Password changed successfully");
     }
 
     private long getRemainingBlockTime(String email) {
