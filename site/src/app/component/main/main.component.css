@@ -74,7 +74,7 @@
 }
 
 .send {
-    background: linear-gradient(45deg, #ff1493, #ff7dc2);
+    background: linear-gradient(45deg, #ff1493, #ff3176);
     color: white;
     font-size: 20px;
     font-weight: bold;
@@ -90,5 +90,5 @@
 .send:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    background: linear-gradient(45deg, #ff1493, #ff7dc2);
+    background: linear-gradient(45deg, #ff1493, #ff3176);
 }

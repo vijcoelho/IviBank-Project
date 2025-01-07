@@ -38,6 +38,7 @@ nav li {
 }
 
 nav li button {
+    background: linear-gradient(45deg, #ff1493, #ff3176);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     background-color: deeppink;
     border: none;
@@ -50,6 +51,12 @@ nav li button {
     display: inline-flex;
     align-items: center; 
     justify-content: center;
+}
+
+nav li button:hover {
+    background: linear-gradient(45deg, #ff1493, #ff3176);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .iconmenu {
