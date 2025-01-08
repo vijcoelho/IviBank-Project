@@ -2,13 +2,13 @@
     <img class="logo" src="images/ivibank_logo.png" alt="test image" id="logo" />
     <nav>
         <ul class="links">
-            <li href="#main" id="main" name="main"> Main </li>
-            <li href="#about" id="about" name="about"> About </li>
-            <li href="#finance" id="finance" name="finance"> Finance </li>
-            <li href="#contactus" id="contactus" name="contactus"> Contact us </li>
+            <li><a [routerLink]="['/main']">Main</a></li>
+            <li><a [routerLink]="['/about']">About</a></li>
+            <li><a [routerLink]="['/finance']">Finance</a></li>
+            <li><a [routerLink]="['/contactus']">Contact us</a></li>
             <li id="button" name="button">
                 <button>
-                    <img class="iconmenu" src="images/icon_menu.png" alt="test icon menu" id="iconmenu"/>
+                    <img class="iconmenu" src="images/icon_menu.png" alt="test icon menu" id="iconmenu" />
                 </button>
             </li>
         </ul>

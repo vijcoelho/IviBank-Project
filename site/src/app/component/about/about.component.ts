@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { TopbarComponent } from "../topbar/topbar.component";
 
 @Component({
-  selector: 'app-main',
+  selector: 'app-about',
   imports: [TopbarComponent],
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  templateUrl: './about.component.html',
+  styleUrl: './about.component.css'
 })
-export class MainComponent {
+export class AboutComponent {
 
 }

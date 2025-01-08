@@ -1,0 +1,65 @@
+.container {
+    width: 100vw; 
+    height: 100vh;
+    background: linear-gradient(#ff1493, #4e13ee);
+    margin: 0;
+    padding: 0;
+    width: 10000px;
+    transform: translateX(-50px);
+    position: relative;
+}
+
+.text-overlay {
+    top: 0;
+    left: 0;
+    padding: 20px;
+    color: white; 
+    font-size: 20px;
+    max-width: 650px;
+    transform: translateX(300px) translateY(250px);
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.title {
+    font-size: 40px;
+    font-family: 'MontSerrat';
+    font-weight: 700;
+    margin-bottom: 70px;
+}
+
+.main-text {
+    font-size: 20px;
+    font-family: 'MontSerrat';
+    font-weight: 400;
+    margin-bottom: 40px;
+}
+
+.pre-final-text {
+    font-size: 20px;
+    font-family: 'MontSerrat';
+    font-weight: 400;
+    margin-bottom: 70px;
+}
+
+.final-text {
+    font-size: 40px;
+    font-family: 'MontSerrat';
+    font-weight: 700;
+}
+
+.image {
+    width: 550px;
+    transform: translateX(1250px) translateY(-250px);
+    border-radius: 10%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border: 5px solid rgba(255, 255, 255, 0.8);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    transform: translateX(1250px) translateY(-250px) scale(1.05);
+}
