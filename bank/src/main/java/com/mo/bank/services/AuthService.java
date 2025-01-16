@@ -52,6 +52,11 @@ public class AuthService {
         String movie = input.get("favorite_movie");
         String toy = input.get("favorite_toy");
 
+        Optional<Account> alreadyExist = accountRepository.findByEmail(email);
+        if (alreadyExist.isPresent()) {
+           return null;
+        }
+
         Account account = new Account(name, email, password, cpf);
         accountRepository.save(account);
 

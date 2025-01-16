@@ -1,20 +1,55 @@
 <app-topbar></app-topbar>
 <main>
-    <div class="stars"></div>
-    <div class="container">
-        <input type="text" placeholder="Name" name="name" required />
-        <input type="email" placeholder="Email" name="email" required />
-        <input type="password" placeholder="Password" name="password" required/>
-        <input type="text" placeholder="CPF" name="cpf" required/>
-        <div class="token">
-            <select id="optionSelect">
-                <option value="favorite_color"> Favorite Color</option>
-                <option value="favorite_toy"> Favorite Toy</option>
-                <option value="favorite_movie"> Favorite Movie</option>
-                <option value="pet_name"> Pet Name</option> 
-            </select>
-            <input type="text" id="selectedText" placeholder="Tokens" />
-        </div>
-        <button class="create" type="submit" id="create_account"> Create </button>
+  <div class="stars"></div>
+  <div class="container">
+    <input
+      type="text"
+      [(ngModel)]="account.name"
+      placeholder="Name"
+      name="name"
+      required
+    />
+    <input
+      type="email"
+      [(ngModel)]="account.email"
+      placeholder="Email"
+      name="email"
+      required
+    />
+    <input
+      type="password"
+      [(ngModel)]="account.password"
+      placeholder="Password"
+      name="password"
+      required
+    />
+    <input
+      type="text"
+      [(ngModel)]="account.cpf"
+      placeholder="CPF"
+      name="cpf"
+      required
+    />
+    <div class="token">
+      <select
+        id="optionSelect"
+        [(ngModel)]="account.tokenType"
+        name="tokenType"
+      >
+        <option value="favorite_color">Favorite Color</option>
+        <option value="favorite_toy">Favorite Toy</option>
+        <option value="favorite_movie">Favorite Movie</option>
+        <option value="pet_name">Pet Name</option>
+      </select>
+      <input
+        type="text"
+        id="selectedText"
+        [(ngModel)]="account.tokenValue"
+        placeholder="Tokens"
+      />
     </div>
+    <button class="create" type="button" (click)="onSubmit()">
+      Create
+    </button>
+  </div>
 </main>
