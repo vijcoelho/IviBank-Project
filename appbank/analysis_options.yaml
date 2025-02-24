@@ -10,6 +10,9 @@
 analyzer:
   errors:
     sort_child_properties_last: ignore
+    depend_on_referenced_packages: ignore
+    avoid_print: ignore ignore ignore
+    deprecated_member_use: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
