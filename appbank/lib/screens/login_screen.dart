@@ -45,16 +45,6 @@ class Login extends StatelessWidget {
                 image: AssetImage('ivibank_logo.png')
               ),
               Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: Text(
-                  "Login",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 40, 
-                    fontWeight: FontWeight.bold
-                  ),
-                ),
-              ),
-              Padding(
                 padding: const EdgeInsets.only(bottom: 50),
                 child: SizedBox(
                   width: 350,
@@ -92,20 +82,20 @@ class Login extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 125),
                 child: ElevatedButton(
                   onPressed: () {
-                    print("button login test");
+                    print("button log in test");
                   }, 
                   child: Text (
-                    "login",
+                    "log in",
                     style: GoogleFonts.montserrat(
                       fontSize: 15, 
                       fontWeight: FontWeight.w500
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 255, 115, 162),
+                    backgroundColor: Colors.pink.shade200,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30)
+                      borderRadius: BorderRadius.circular(5)
                     )
                   ),
                 ),
